@@ -175,10 +175,20 @@ class DatasetTemplate(torch_data.Dataset):
         for key, val in data_dict.items():
             try:
                 if key in ['voxels', 'voxel_num_points']:
-                    ret[key] = np.concatenate(val, axis=0)
+                    # print(key, val)
+                    if key=='voxels': #! Debugging
+                        for el_l in val:
+                            print(el_l.numpy().shape)
+                    # print(key, val.shape)
+                    ret[key] = np.concatenate([sub_tensor.numpy() for sub_tensor in val], axis=0)
                 elif key in ['points', 'voxel_coords']:
+                    #! Debugging
+                    # print(key, val)
+                    
                     coors = []
                     for i, coor in enumerate(val):
+                        if key == "voxel_coords":
+                            coor = coor.numpy()
                         coor_pad = np.pad(coor, ((0, 0), (1, 0)), mode='constant', constant_values=i)
                         coors.append(coor_pad)
                     ret[key] = np.concatenate(coors, axis=0)

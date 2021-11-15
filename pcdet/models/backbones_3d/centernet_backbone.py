@@ -2,9 +2,9 @@ import torch
 import torch.nn as nn
 from torch.nn import init
 from torch.nn.parameter import Parameter
-import spconv
-from spconv import ops
-import spconv.functional as Fsp
+import spconv.pytorch as spconv
+from spconv.pytorch import ops
+import spconv.pytorch.functional as Fsp
 import numpy as np
 import math
 

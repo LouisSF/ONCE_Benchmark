@@ -1,7 +1,8 @@
 from functools import partial
 
 import numpy as np
-
+import torch
+import cumm
 from ...utils import box_utils, common_utils
 
 
@@ -43,15 +44,26 @@ class DataProcessor(object):
     def transform_points_to_voxels(self, data_dict=None, config=None, voxel_generator=None):
         if data_dict is None:
             try:
-                from spconv.utils import VoxelGeneratorV2 as VoxelGenerator
+                # from spconv.utils import VoxelGeneratorV2 as VoxelGenerator
+                raise Exception("Test error")
+                from spconv.utils import Point2VoxelGPU3d as VoxelGenerator
             except:
-                from spconv.utils import VoxelGenerator
-
+                # from spconv.utils import VoxelGenerator
+                print("GPU point2voxel missed, import CPU version...")
+                from spconv.utils import Point2VoxelCPU3d as VoxelGenerator
+                #exit()
+            # voxel_generator = VoxelGenerator(
+            #     voxel_size=config.VOXEL_SIZE,
+            #     point_cloud_range=self.point_cloud_range,
+            #     max_num_points=config.MAX_POINTS_PER_VOXEL,
+            #     max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+            # )
             voxel_generator = VoxelGenerator(
-                voxel_size=config.VOXEL_SIZE,
-                point_cloud_range=self.point_cloud_range,
-                max_num_points=config.MAX_POINTS_PER_VOXEL,
-                max_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
+                vsize_xyz=config.VOXEL_SIZE,
+                coors_range_xyz=self.point_cloud_range,
+                num_point_features=4,
+                max_num_points_per_voxel=config.MAX_POINTS_PER_VOXEL,
+                max_num_voxels=config.MAX_NUMBER_OF_VOXELS[self.mode]
             )
             grid_size = (self.point_cloud_range[3:6] - self.point_cloud_range[0:3]) / np.array(config.VOXEL_SIZE)
             self.grid_size = np.round(grid_size).astype(np.int64)
@@ -59,7 +71,7 @@ class DataProcessor(object):
             return partial(self.transform_points_to_voxels, voxel_generator=voxel_generator)
 
         points = data_dict['points']
-        voxel_output = voxel_generator.generate(points)
+        voxel_output = voxel_generator.point_to_voxel(cumm.core_cc.tensorview_bind.from_numpy(points)) #voxel_generator.generate(points)
         if isinstance(voxel_output, dict):
             voxels, coordinates, num_points = \
                 voxel_output['voxels'], voxel_output['coordinates'], voxel_output['num_points_per_voxel']
