@@ -1,6 +1,6 @@
 # ONCE Benchmark
 
-This is a reproduced benchmark for 3D object detection on the [ONCE](https://arxiv.org/abs/2106.11037) (One Million Scenes) dataset. 
+This is a reproduced benchmark for 3D object detection on the [ONCE](https://once-for-auto-driving.github.io/index.html) (One Million Scenes) dataset. 
 
 The code is mainly based on [OpenPCDet](https://github.com/open-mmlab/OpenPCDet).
 
@@ -75,7 +75,7 @@ If you find this project useful in your research, please consider cite:
 @article{mao2021one,
   title={One Million Scenes for Autonomous Driving: ONCE Dataset},
   author={Mao, Jiageng and Niu, Minzhe and Jiang, Chenhan and Liang, Hanxue and Liang, Xiaodan and Li, Yamin and Ye, Chaoqiang and Zhang, Wei and Li, Zhenguo and Yu, Jie and others},
-  journal={arXiv preprint arXiv:2106.11037},
+  journal={NeurIPS},
   year={2021}
 }
 ```
