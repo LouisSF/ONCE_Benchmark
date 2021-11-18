@@ -6,5 +6,3 @@ easydict
 pyyaml
 scikit-image
 tqdm
-json
-cv2
